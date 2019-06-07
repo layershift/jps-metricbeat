@@ -1,0 +1,3 @@
+Cmnd_Alias METRICBEAT = /usr/bin/systemctl restart metricbeat*, /usr/bin/systemctl stop metricbeat*, /usr/bin/systemctl start metricbeat*, /usr/bin/systemctl status metricbeat*, /usr/bin/metricbeat *, /etc/init.d/metricbeat * 
+
+%ssh-access ALL = NOPASSWD: METRICBEAT

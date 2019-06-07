@@ -1,0 +1,83 @@
+_info : 'https://docs.cloudscripting.com/1.6.2/'
+version: '1.6.2'
+type: update
+name: 'Metricbeat'
+homepage: http://jps.layershift.com/metricbeat/
+baseUrl: http://jps.layershift.com/metricbeat/
+logo: /images/Metricbeat_.png?_r=${fn.random}
+
+targetNodes:
+  nodeGroup:
+  - bl
+  - cp
+  - sqldb
+  - nosqldb
+  - cache
+  - vds
+
+settings:
+  main:
+    fields:
+    - type: list
+      name: version
+      caption: Version
+      values:
+        6.8.0: 6.8.0
+        7.1.1: 7.1.1
+      hideLabel: false
+      editable: false
+      required: true
+      default: 7.1.1
+    - type: string
+      name: elasticSearchAddress
+      caption: ElasticSearch URL
+      hideLabel: false
+      required: true
+      default: http://localhost:9200
+      
+
+categories:
+  - apps/others
+
+description:
+  text: /texts/description.md
+  short: Metricbeat is a lightweight shipper that you can install on your servers to periodically collect metrics from the operating system and from services running on the server
+
+onAfterRedeployContainer:
+  install_metricbeat:
+    name: Install Action
+
+onInstall:
+  install_metricbeat:
+    name: Install Action
+
+onUninstall:
+  uninstall_metricbeat
+
+actions:
+  install_metricbeat:
+    cmd[${targetNodes.nodeGroup}]:
+      - version=${settings.version};
+        case "$version" in
+        6.8.0) rpm -Uvh https://artifacts.elastic.co/downloads/beats/metricbeat/metricbeat-6.8.0-x86_64.rpm; ;;
+        *) rpm -Uvh https://artifacts.elastic.co/downloads/beats/metricbeat/metricbeat-7.1.1-x86_64.rpm; ;;
+        esac;
+        sed 's#\["localhost:9200"\]#\["${settings.elasticSearchAddress}"\]#' -i /etc/metricbeat/metricbeat.yml;
+        chgrp 700 /etc/metricbeat/metricbeat.yml;
+        chmod 660 /etc/metricbeat/metricbeat.yml;
+        grep "\-\-strict.perms=false" /etc/init.d/metricbeat; if [ $? -gt 0 ]; then args_base=$(grep ^args= /etc/init.d/metricbeat | sed 's#"$##'); args_base=$args_base" --strict.perms=false\""; sed "s#^args=.*#$args_base##" -i /etc/init.d/metricbeat; fi;
+        grep "\-\-strict.perms=false" /usr/lib/systemd/system/metricbeat.service; if [ $? -gt 0 ]; then ExecStart_base=$(grep ^ExecStart /usr/lib/systemd/system/metricbeat.service) ExecStart_base=$ExecStart_base" --strict.perms=false"; sed "s#^ExecStart=.*#$ExecStart_base##" -i  /usr/lib/systemd/system/metricbeat.service; fi;
+        curl -fsSL '${baseUrl}/scripts/sudo_metricbeat' -o /etc/sudoers.d/metricbeat;
+        systemctl enable metricbeat;
+        systemctl restart metricbeat;
+    user: root
+    log: ${targetNodes.nodeGroup}
+  
+  uninstall_metricbeat:
+    cmd[${targetNodes.nodeGroup}]:
+      - rpm -evh metricbeat;
+        rm -f /etc/sudoers.d/metricbeat
+    user: root
+ 
+success: /texts/success.md
+ 
