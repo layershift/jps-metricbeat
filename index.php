@@ -36,7 +36,17 @@
             Deploy jps-test to Layershift Cloud <b>Existing</b> Environment
         </p>
         <p>
-	        <?php $manifest=$_SERVER['REQUEST_SCHEME']."://".$_SERVER['HTTP_HOST'].str_replace("index.php","",$_SERVER['REQUEST_URI'])."metricbeat.jps";?>
+            <?php
+                $jps="metricbeat.jps";
+                if (isset($_SERVER['REQUEST_SCHEME']))
+                    {
+                        $manifest=$_SERVER['REQUEST_SCHEME']."://".$_SERVER['HTTP_HOST'].str_replace("index.php","",$_SERVER['REQUEST_URI']).$jps;
+                    }
+                else
+                    {
+                        $manifest=str_replace("index.php","",$_SERVER['SCRIPT_URI']).$jps;
+                    }
+            ?>
 	        <pre style="color:#601748"><?=$manifest?></pre>
             <a href="https://app.j.layershift.co.uk/?manifest=<?=$manifest?>" target="myTarget">
                 <img src="https://raw.githubusercontent.com/jelastic-jps/jpswiki/master/images/getithosted.png"  alt="GET IT HOSTED" style="max-width:100%;">
