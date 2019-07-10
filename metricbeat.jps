@@ -68,6 +68,9 @@ actions:
         grep "\-\-strict.perms=false" /etc/init.d/metricbeat; if [ $? -gt 0 ]; then args_base=$(grep ^args= /etc/init.d/metricbeat | sed 's#"$##'); args_base=$args_base" --strict.perms=false\""; sed "s#^args=.*#$args_base##" -i /etc/init.d/metricbeat; fi;
         grep "\-\-strict.perms=false" /usr/lib/systemd/system/metricbeat.service; if [ $? -gt 0 ]; then ExecStart_base=$(grep ^ExecStart /usr/lib/systemd/system/metricbeat.service) ExecStart_base=$ExecStart_base" --strict.perms=false"; sed "s#^ExecStart=.*#$ExecStart_base##" -i  /usr/lib/systemd/system/metricbeat.service; fi;
         curl -fsSL '${baseUrl}/scripts/sudo_metricbeat' -o /etc/sudoers.d/metricbeat;
+        curl -fsSL '${baseUrl}/scripts/profile_metricbeat' -o /etc/profile.d/metricbeat.sh;
+        mkdir /var/log/metricbeat;
+        chown 700:700 /var/log/metricbeat/;
         systemctl enable metricbeat;
         systemctl restart metricbeat;
     user: root
@@ -77,6 +80,7 @@ actions:
     cmd[${targetNodes.nodeGroup}]:
       - rpm -evh metricbeat;
         rm -f /etc/sudoers.d/metricbeat
+        rm -f /etc/profile.d/metricbeat.sh
     user: root
  
 success: /texts/success.md
