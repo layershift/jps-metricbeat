@@ -33,7 +33,7 @@
     <div id="container">
     
         <p>
-            Deploy jps-test to Layershift Cloud <b>Existing</b> Environment
+            Deploy Metricbeat to Layershift Cloud <b>Existing</b> Environment
         </p>
         <p>
             <?php
