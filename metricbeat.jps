@@ -9,10 +9,13 @@ logo: /images/Metricbeat_.png?_r=${fn.random}
 targetNodes:
   nodeGroup:
   - bl
-  - cp
-  - sqldb
-  - nosqldb
+  - build
   - cache
+  - cp
+  - docker
+  - extra
+  - nosqldb
+  - sqldb
   - vds
 
 settings:
