@@ -7,16 +7,7 @@ baseUrl: http://jps.layershift.com/metricbeat/
 logo: /images/Metricbeat_.png?_r=${fn.random}
 
 targetNodes:
-  nodeGroup:
-  - bl
-  - build
-  - cache
-  - cp
-  - docker
-  - extra
-  - nosqldb
-  - sqldb
-  - vds
+  nodeGroup: '*'
 
 settings:
   main:
