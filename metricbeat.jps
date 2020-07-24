@@ -1,9 +1,10 @@
 _info : 'https://docs.cloudscripting.com/1.6.2/'
 version: '1.6.2'
 type: update
+id: 'metricbeat'
 name: 'Metricbeat'
-homepage: http://jps.layershift.com/metricbeat/
-baseUrl: http://jps.layershift.com/metricbeat/
+#homepage: http://jps.layershift.com/metricbeat
+baseUrl: https://raw.githubusercontent.com/layershift/jps-metricbeat/master
 logo: /images/Metricbeat_.png?_r=${fn.random}
 
 targetNodes:
